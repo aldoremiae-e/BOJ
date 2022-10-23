@@ -1,7 +1,7 @@
 import sys
 T = int(input())
 for tc in range(T):
-    ans = 0
+    flag = 0
     lst = sys.stdin.readline()
     stack = []
     for l in lst:
@@ -11,11 +11,10 @@ for tc in range(T):
             stack.append(l)
         elif l == ')':
             if stack:
-                if stack[-1] == '(':
-                    stack.pop()
+                stack.pop()
             else:
-                ans = -1
-    if stack or ans == -1:
+                flag = -1
+    if stack or flag == -1:
         print('NO')
     else:
         print('YES')
