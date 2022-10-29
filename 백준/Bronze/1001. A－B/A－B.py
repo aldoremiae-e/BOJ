@@ -1,2 +1,2 @@
-a, b = map(int,input().split())
-print(a-b)
+n, m = list(map(int,input().split()))
+print(n-m)
