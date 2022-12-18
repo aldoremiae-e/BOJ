@@ -1,26 +1,26 @@
-N = int(input())
-skill = input()
-cnt = 0	
-Ls, Ss = 0, 0	
-
-for i in skill :
-    if i == 'L' :	
-        Ls += 1
-    elif i == 'R' :
-        if Ls > 0 :	
-            cnt += 1	
-            Ls -= 1	
-        else :		
-            break	
-    elif i == 'S' :	
-        Ss += 1
-    elif i == 'K' :
-        if Ss > 0 :
-            cnt += 1	
-            Ss -= 1	
-        else :		
+from sys import stdin
+N = int(stdin.readline())
+skill = stdin.readline().rstrip()
+cnt = 0
+flagR = 0
+flagK = 0
+for i in skill:
+    if i == 'L':
+        flagR += 1
+    elif i == 'R':
+        if flagR > 0:
+            cnt += 1
+            flagR -= 1
+        else:
             break
-    else :
+    elif i == 'S':
+        flagK += 1
+    elif i == 'K':
+        if flagK > 0:
+            cnt += 1
+            flagK -= 1
+        else:
+            break
+    else:
         cnt += 1
-
 print(cnt)
