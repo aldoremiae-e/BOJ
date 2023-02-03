@@ -1,16 +1,16 @@
 answer = 0
-def my_dfs(n, numbers, target, value):
+def dfs(sn, t, numbers, i):
     global answer
-    N = len(numbers)
-    if (n == N and target == value):
-        answer += 1
+    if i == len(numbers) -1:
+        if sn == t:
+            answer += 1
         return
-    if n == N:
-        return
-    my_dfs(n+1, numbers, target, value+numbers[n])
-    my_dfs(n+1, numbers, target, value-numbers[n])
+    dfs(sn+numbers[i+1], t, numbers, i+1)
+    dfs(sn-numbers[i+1], t, numbers, i+1)
         
+    
 def solution(numbers, target):
     global answer
-    my_dfs(0, numbers, target, 0)
+    dfs(numbers[0], target, numbers, 0)
+    dfs(-numbers[0], target, numbers, 0)
     return answer
