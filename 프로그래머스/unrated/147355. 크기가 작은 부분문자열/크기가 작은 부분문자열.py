@@ -18,5 +18,5 @@ def solution(t, p):
         if int((num - nint) * (10 ** (-k))) <= int(p):
             answer += 1
         l += 1
-     '''
+    '''
     return answer
