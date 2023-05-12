@@ -1,16 +1,14 @@
-answer = 0
-def dfs(sn, t, numbers, i):
+def dfs(nums, t, L, s, num):
     global answer
-    if i == len(numbers) -1:
-        if sn == t:
+    if s == L:
+        if num == t:
             answer += 1
         return
-    dfs(sn+numbers[i+1], t, numbers, i+1)
-    dfs(sn-numbers[i+1], t, numbers, i+1)
-        
-    
-def solution(numbers, target):
+    dfs(nums, t, L, s+1, num + nums[s])
+    dfs(nums, t, L, s+1, num - nums[s])
+def solution(nums, t):
     global answer
-    dfs(numbers[0], target, numbers, 0)
-    dfs(-numbers[0], target, numbers, 0)
+    answer = 0
+    L = len(nums)
+    dfs(nums, t, L, 0, 0)
     return answer
