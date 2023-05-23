@@ -1,34 +1,32 @@
-'''
-N = 2^n
-r , c = r행 c열
-'''
+def conquer(N, r, c, cnt):
+    if N == 2:
+        # 숫자출력
+        if r == 0 and c == 0:
+            print(cnt)
+        elif r == 0 and c == 1:
+            print(cnt+1)
+        elif r == 1 and c == 0:
+            print(cnt+2)
+        elif r == 1 and c == 1:
+            print(cnt+3)
+        return
+    # (0, 0) (0, 4) (4, 0) (4, 4)
+    n = N//2
+    num = n**2
+    if r < n and c < n:
+        # 2사분면
+        conquer(n, r, c, cnt)
+    elif r < n and c >= n:
+        # 1사분면
+        conquer(n, r, c-n, cnt + num)
+    elif r >= n and c < n:
+        # 3사분면
+        conquer(n, r-n, c, cnt + num*2)
+    elif r >= n and c >= n:
+        # 4사분면
+        conquer(n, r-n, c-n, cnt + num*3)
 
 N, r, c = map(int, input().split())
-ans = 0
- # N번 재귀
-while N != 0:
-    # 분할 정복
-    # 4분할 기준 L : (2**N)//2 == 2**(N-1)보다 큰지 작은지
-    # while 할 때 N -= 1 을 해야하므로, 먼저 뺀다음 돌리는게 효율적이다.
-    N -= 1
-    L = 2 ** N # 4
-
-    # 1사분면
-    if r < L and c < L:
-        ans += (L ** 2) * 0
-
-    # 2사분면 - 열r은 그대로, 행c은 L만큼 왼쪽으로 땡겨줘
-    elif r < L and c >= L:
-        ans += (L ** 2) * 1
-        c -= L
-    # 3사분면 - 열r을 아래쪽으로 땡겨줘, 행c는 그대로
-    elif r >= L and c < L:
-        ans += (L ** 2) * 2
-        r -= L
-    #4사분면 - 열, 행 둘다 땡겨줘
-    else:
-        ans += (L ** 2) * 3
-        r -= L
-        c -= L
-
-print(ans)
+# 맵을 줄이는 것이 아니고, 좌표(r, c)의 값을 줄이자
+# 첫번째값만 가져와
+conquer(2**N, r, c, 0)
