@@ -1,5 +1,4 @@
 from heapq import heappop, heappush
-from pprint import pprint
 N, M, k = map(int, input().split())
 maps = [[0] * N for _ in range(N)]
 heap = []
@@ -31,9 +30,12 @@ def next_heap(heap):
         # 방향 우선순위
         dirs = shark_dict[sn][sd]
         # 다음방향이 될 것
-        next_ij = []
-        ni, nj = -1, -1
+        next_d = -1
+        next_i, next_j = -1, -1
+        flag = False
         for idx in range(4):
+            if flag:
+                break
             if dirs[idx] == 1:
                 ni, nj = si - 1, sj
             elif dirs[idx] == 2:
@@ -46,10 +48,15 @@ def next_heap(heap):
             if not (0 <= ni < N and 0 <= nj < N):
                 continue
             if maps[ni][nj] == 0:
-                heappush(next_ij, (0, idx, ni, nj))
+                flag = True
+                next_d, next_i, next_j = dirs[idx]-1, ni, nj
+        #        heappush(next_ij, (0, idx, ni, nj))
             elif maps[ni][nj] // 1000 == maps[si][sj] // 1000:
-                heappush(next_ij, (1, idx, ni, nj))
-        next_d, next_i, next_j = dirs[next_ij[0][1]] - 1, next_ij[0][2], next_ij[0][3]
+                if next_d == -1:
+                    next_d, next_i, next_j = dirs[idx]-1, ni, nj
+        #        heappush(next_ij, (1, idx, ni, nj))
+        #next_d, next_i, next_j = dirs[next_ij[0][1]] - 1, next_ij[0][2], next_ij[0][3]
+        #nq.append((sn, next_d, next_i, next_j))
         nq.append((sn, next_d, next_i, next_j))
     return nq
 
