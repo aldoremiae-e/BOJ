@@ -1,13 +1,12 @@
 def solution(n, s):
-    best = []
-    max_num = 0
-    if n > s:
+    # 곱이 최대가 되는 방법 : 집합의 수 간의 차이가 안나면 좋음
+    if s // n == 0:
         return [-1]
-    for _ in range(n):
-        best.append(s//n)
-    idx = len(best) - 1
-    for _ in range(s - sum(best)):
-        best[idx] += 1
-        idx -= 1
-    return best
-        
+    else:
+        best = []
+        while n > 0:
+            best.append(s//n)
+            s -= (s//n)
+            n -= 1
+            
+        return best
