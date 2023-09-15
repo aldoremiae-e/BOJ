@@ -1,65 +1,75 @@
-from copy import deepcopy
 from collections import deque
-def ice(si, sj):
-    if rot[si][sj] == 0:
-        return 0
-    cnt = 0
-    for di, dj in dir:
-        ci, cj = si + di, sj + dj
-        if (0 <= ci < M and 0 <= cj < M) and rot[ci][cj] != 0:
-            cnt += 1
+from pprint import pprint
+N, Q = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(2**N)]
+Llst = list(map(int, input().split()))
+n = 2 ** N
+dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
-    return cnt
+def rotate(si, sj, l):
+    global new_board
+    #rot[si + j][sj + L - 1 - i] = maps[si + i][sj + j]
+    for i in range(l):
+        for j in range(l):
+            new_board[si + j][sj + l - 1 - i] = board[si + i][sj + j]
+    return
+def check(ci, cj):
+    ice = 0
+    for di, dj in dirs:
+        ni, nj = ci + di, cj + dj
+        if not (0 <= ni < n and 0 <= nj < n):
+            continue
+        if new_board[ni][nj] > 0:
+            ice += 1
+    if ice < 3:
+        return True
+    else:
+        return False
 
-def check(si, sj):
+for L in Llst:
+    # rotate
+    l = 2 ** L
+    new_board = [[0] * n for _ in range(n)]
+    for i in range(0, n, l):
+        for j in range(0, n, l):
+            rotate(i, j, l)
+    # 얼음이 있는 칸 3개 이상
+
+    for i in range(n):
+        for j in range(n):
+            board[i][j] = new_board[i][j]
+            if board[i][j] > 0 and check(i, j):
+                board[i][j] -= 1
+
+def bfs(si, sj):
+    global visit, island
     q = deque()
     q.append((si, sj))
     visit[si][sj] = 1
-    ret = 1
+    cnt = 1
     while q:
-        ni, nj = q.popleft()
-        for di, dj in dir:
-            ci, cj = ni + di, nj + dj
-            if (0 <= ci < M and 0 <= cj < M) and maps[ci][cj] != 0 and visit[ci][cj] == 0:
-                visit[ci][cj] = 1
-                ret += 1
-                q.append((ci, cj))
-    return ret
-
-
-# 분할 정복 - 격자돌리기
-def solve(si, sj):
-    global rot
-    for i in range(L):
-        for j in range(L):
-            rot[si+j][sj+L-1-i] = maps[si+i][sj+j]
+        ci, cj = q.popleft()
+        for di, dj in dirs:
+            ni, nj = ci + di, cj + dj
+            if not (0 <= ni < n and 0 <= nj < n):
+                continue
+            if visit[ni][nj] == 1 or board[ni][nj] == 0:
+                continue
+            visit[ni][nj] = 1
+            cnt += 1
+            q.append((ni, nj))
+    island = max(island, cnt)
     return
 
-dir = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-N, Q = map(int, input().split())
-M = 2 ** N
-rot = [[0] * M for _ in range(M)]
-maps = [list(map(int, input().split())) for _ in range(M)]
-L_lst = list(map(int, input().split()))
-for i in range(Q):
-    # 시전방법
-
-    L = 2 ** L_lst[i]
-    for y in range(0, M, L):
-        for x in range(0, M, L):
-           solve(y, x)
-    maps = deepcopy(rot)
-    for y in range(M):
-        for x in range(M):
-            if maps[y][x] > 0 and ice(y, x) < 3:
-                maps[y][x] -= 1
+visit = [[0] * n for _ in range(n)]
 ans = 0
-ans2 = 0
-visit = [[0] * M for _ in range(M)]
-for i in range(M):
-    for j in range(M):
-        if maps[i][j] > 0:
-            ans += maps[i][j]
-            ans2 = max(ans2, check(i, j))
+island = 0
+for i in range(n):
+    for j in range(n):
+       if board[i][j] == 0:
+           continue
+       ans += board[i][j]
+       bfs(i, j)
+
 print(ans)
-print(ans2)
+print(island)
