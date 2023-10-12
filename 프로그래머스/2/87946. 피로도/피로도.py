@@ -6,8 +6,6 @@ def solution(k, d):
     flag = False
     def back_tracking(h, cnt):
         global answer, visit, flag
-        if h < 0:
-            return
         answer = max(answer, cnt)
         if answer == l:
             flag = True
