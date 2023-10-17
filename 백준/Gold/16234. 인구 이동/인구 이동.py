@@ -1,44 +1,44 @@
 from collections import deque
-from copy import deepcopy
+from math import floor
 N, L, R = map(int, input().split())
-A = [list(map(int, input().split())) for _ in range(N)]
+board = [list(map(int, input().split())) for _ in range(N)]
+ans = 0
+dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+def bfs(board, L, R):
+    visit = [[False] * N for _ in range(N)]
+    flag = False
+    for i in range(N):
+        for j in range(N):
+            if visit[i][j]:
+                continue
+            visit[i][j] = True
+            q = deque()
+            q.append((i, j))
+            q2 = [(i, j)]
+            total = board[i][j]
+            while q:
+                ci, cj = q.popleft()
+                for di, dj in dirs:
+                    ni, nj = di + ci, dj + cj
+                    if not (0 <= ni < N and 0 <= nj < N):
+                        continue
+                    if visit[ni][nj]:
+                        continue
+                    diff = abs(board[ci][cj] - board[ni][nj])
+                    if L <= diff <= R:
+                        flag = True
+                        q.append((ni, nj))
+                        q2.append((ni, nj))
+                        visit[ni][nj] = True
+                        total += board[ni][nj]
+            val = total // len(q2)
+            for x, y in q2:
+                board[x][y] = val
+    return flag
 
-def bfs(si, sj):
-    global day, flag, visit
-    q = deque()
-    q2 = deque()
-    q.append((si, sj))
-    q2.append((si, sj))
-    visit[si][sj] = 1
-    d = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-    people = A[si][sj]
-    ground = 1
-    while q:
-        i, j = q.popleft()
-        for di, dj in d:
-            ci, cj = i + di, j + dj
-            if 0 <= ci < N and 0 <= cj < N and visit[ci][cj] == 0:
-                if L <= abs(A[i][j] - A[ci][cj]) <= R:
-                    flag = 1
-                    ground += 1
-                    people += A[ci][cj]
-                    visit[ci][cj] = 1
-                    q.append((ci, cj))
-                    q2.append((ci, cj))
-    next_pp = people // ground
-    if len(q2) > 1: 
-        while q2:
-            i, j = q2.popleft()
-            A[i][j] = next_pp
-
-day = 0
-flag = 1
-while flag:
-    visit = [[0] * N for _ in range(N)]
-    flag = 0
-    for x in range(N):
-        for y in range(N):
-            if visit[x][y] == 0:
-                bfs(x, y)
-    day += 1
-print(day-1)
+while True:
+    if bfs(board, L, R):
+        ans += 1
+    else:
+        print(ans)
+        break
