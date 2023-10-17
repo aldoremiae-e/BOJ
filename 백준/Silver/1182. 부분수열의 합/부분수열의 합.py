@@ -1,14 +1,18 @@
-from itertools import combinations
-N, S = map(int, input().split()) # N개의 정수의 합이 S
-arr = list(map(int, input().split()))
+N, S = map(int, input().split())
+lst = list(map(int, input().split()))
 cnt = 0
-
-for r in range(1, len(arr)+1):
-    part = list(combinations(arr, r))
-    for l in part:
-        s = 0
-        for m in l:
-            s += m
-        if s == S:
+def solve(index, ret):
+    global cnt
+    if index == N:
+        # 정답일 경우
+        if ret == S:
             cnt += 1
+        # 아닐경우
+        return
+    solve(index+1, ret+lst[index])
+    solve(index+1, ret)
+solve(0, 0)
+# 예외처리 공집합 - 공집합의 합은 0이라, S가 0이면 하나빼주자.
+if S == 0:
+    cnt -= 1
 print(cnt)
