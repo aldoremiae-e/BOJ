@@ -1,36 +1,33 @@
 N = int(input())
-arr = list(map(int, input().split()))
-pl, mi, mu, di = map(int, input().split())
+A = list(map(int, input().split()))
+P, M, MUL, DIV = map(int, input().split()) # + - * //
+# 2 1 1 1
+# 1_2_3_4_5_6 (5*4*3*2*1) => 총 60가지
 
-def ref(ans, arr, i, pl, mi, mu, di, cnt):
+def recursion(num, idx, plus, minus, mul, div):
     global maxnum, minnum
-    if i == N:
-        maxnum = ans if ans > maxnum else maxnum
-        minnum = ans if ans < minnum else minnum
+    if idx == N:
+        maxnum = max(maxnum, num)
+        minnum = min(minnum, num)
         return
+    # 더하기
+    if plus > 0:
+        recursion(num + A[idx], idx+1, plus-1, minus, mul, div)
+    # 빼기
+    if minus > 0:
+        recursion(num - A[idx], idx+1, plus, minus-1, mul, div)
+    # 곱하기
+    if mul > 0:
+        recursion(num * A[idx], idx+1, plus, minus, mul-1, div)
+    # 나누기
+    if div > 0:
+        if num >= 0:
+            recursion(num // A[idx], idx+1, plus, minus, mul, div-1)
+        else:
+            recursion(-(abs(num) // A[idx]), idx+1, plus, minus, mul, div-1)
 
-    if pl > 0:
-        #print(ans,cnt)
-        ref(ans + arr[i], arr, i+1, pl-1, mi, mu, di, cnt+1)
-
-    if mi > 0:
-        #print(ans,cnt)
-        ref(ans - arr[i], arr, i+1, pl, mi-1, mu, di, cnt+1)
-
-    if mu > 0:
-        #print(ans, cnt)
-        ref(ans * arr[i], arr, i+1, pl, mi, mu-1, di, cnt+1)
-
-    if di > 0:
-        #print(ans, cnt)
-        ref(ans // arr[i] if ans > 0 else -((-ans)//arr[i])
-            , arr, i+1, pl, mi, mu, di-1, cnt+1)
-
-ans = arr[0]
-i = 1
-maxnum = -999999999
-minnum = 999999999
-cnt = 0
-ref(ans, arr, i, pl, mi, mu, di, cnt)
+maxnum = -int(1e9) - 1
+minnum = int(1e9) + 1
+recursion(A[0], 1, P, M, MUL, DIV)
 print(maxnum)
 print(minnum)
