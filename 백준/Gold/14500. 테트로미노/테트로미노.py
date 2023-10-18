@@ -1,62 +1,35 @@
-from sys import stdin
-N, M = map(int, stdin.readline().split())
-maps = [list(map(int, stdin.readline().split())) for _ in range(N)]
-lst = [0] * 19
-# 0
+'''
+4:27 ~ 4:50
+'''
+blocks = [[(0, 1), (0, 2), (0, 3)], [(1, 0), (2, 0), (3, 0)],
+          [(0, 1), (1, 0), (1, 1)], [(1, 0), (2, 0), (2, 1)],
+          [(0, 1), (0, 2), (1, 2)], [(0, 1), (1, 0), (2, 0)],
+          [(1, 0), (1, 1), (1, 2)], [(2, -1), (1, 0), (2, 0)],
+          [(1, -2), (1, -1), (1, 0)], [(0, 1), (1, 1), (2, 1)],
+          [(0, 1), (0, 2), (1, 0)], [(1, 0), (1, 1), (2, 1)],
+          [(1, -1), (1, 0), (0, 1)], [(1, -1), (1, 0), (2, -1)],
+          [(0, 1), (1, 1), (1, 2)], [(1, 0), (1, 1), (2, 0)],
+          [(1, -1), (1, 0), (1, 1)], [(1, -1), (1, 0), (2, 0)], [(0, 1), (0, 2), (1, 1)]]
+
+N, M = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(N)]
+def go(si, sj):
+    ret = 0
+    for block in blocks:
+        flag = True
+        num = board[si][sj]
+        for k in range(3):
+            ni, nj = si + block[k][0], sj + block[k][1]
+            if not (0 <= ni < N and 0 <= nj < M):
+                flag = False
+                break
+            num += board[ni][nj]
+        if flag:
+            ret = max(ret, num)
+    return ret
+ans = 0
 for i in range(N):
-    for j in range(0, M-3):
-        if lst[0] < maps[i][j] + maps[i][j+1] + maps[i][j+2] + maps[i][j+3]:
-            lst[0] = maps[i][j] + maps[i][j+1] + maps[i][j+2] + maps[i][j+3]
-# 1
-for j in range(M):
-    for i in range(0, N-3):
-        if lst[1] < maps[i][j] + maps[i+1][j] + maps[i+2][j] + maps[i+3][j]:
-            lst[1] = maps[i][j] + maps[i+1][j] + maps[i+2][j] + maps[i+3][j]
+    for j in range(M):
+        ans = max(ans, go(i, j))
 
-# 2,3,4,5,10,12,13,17
-for i in range(0, N-2):
-    for j in range(0, M-1):
-        if lst[2] < maps[i][j] + maps[i+1][j] + maps[i+2][j] + maps[i+2][j+1]:
-            lst[2] = maps[i][j] + maps[i + 1][j] + maps[i + 2][j] + maps[i + 2][j + 1]
-        if lst[3] < maps[i][j] + maps[i][j+1] + maps[i+1][j+1] + maps[i+2][j+1]:
-            lst[3] = maps[i][j] + maps[i][j + 1] + maps[i + 1][j + 1] + maps[i + 2][j + 1]
-        if lst[4] < maps[i][j] + maps[i][j+1] + maps[i+1][j] + maps[i+2][j]:
-            lst[4] = maps[i][j] + maps[i][j + 1] + maps[i + 1][j] + maps[i + 2][j]
-        if lst[5] < maps[i][j+1] + maps[i+1][j+1] + maps[i+2][j] + maps[i+2][j+1]:
-            lst[5] = maps[i][j + 1] + maps[i + 1][j + 1] + maps[i + 2][j] + maps[i + 2][j + 1]
-        if lst[10] < maps[i][j] + maps[i+1][j] + maps[i+1][j+1] + maps[i+2][j+1]:
-            lst[10] = maps[i][j] + maps[i + 1][j] + maps[i + 1][j + 1] + maps[i + 2][j + 1]
-        if lst[12] < maps[i][j] + maps[i+1][j] + maps[i+2][j] + maps[i+1][j+1]:
-            lst[12] = maps[i][j] + maps[i + 1][j] + maps[i + 2][j] + maps[i + 1][j + 1]
-        if lst[13] < maps[i+1][j] + maps[i][j+1] + maps[i+1][j+1] + maps[i+2][j+1]:
-            lst[13] = maps[i + 1][j] + maps[i][j + 1] + maps[i + 1][j + 1] + maps[i + 2][j + 1]
-        if lst[17] < maps[i][j+1] + maps[i+1][j] + maps[i+1][j+1] + maps[i+2][j]:
-            lst[17] = maps[i][j + 1] + maps[i + 1][j] + maps[i + 1][j + 1] + maps[i + 2][j]
-
-# 6,7,8,9,11,14,15,18
-for i in range(0, N-1):
-    for j in range(0, M-2):
-        if lst[6] < maps[i][j] + maps[i+1][j] + maps[i][j+1] + maps[i][j+2]:
-            lst[6] = maps[i][j] + maps[i + 1][j] + maps[i][j + 1] + maps[i][j + 2]
-        if lst[7] < maps[i][j+2] + maps[i+1][j] + maps[i+1][j+1] + maps[i+1][j+2]:
-            lst[7] = maps[i][j + 2] + maps[i + 1][j] + maps[i + 1][j + 1] + maps[i + 1][j + 2]
-        if lst[8] < maps[i][j] + maps[i][j+1] + maps[i][j+2] + maps[i+1][j+2]:
-            lst[8] = maps[i][j] + maps[i][j + 1] + maps[i][j + 2] + maps[i + 1][j + 2]
-        if lst[9] < maps[i][j] + maps[i+1][j] + maps[i+1][j+1] + maps[i+1][j+2]:
-            lst[9] = maps[i][j] + maps[i + 1][j] + maps[i + 1][j + 1] + maps[i + 1][j + 2]
-        if lst[11] < maps[i][j+1] + maps[i][j+2] + maps[i+1][j] + maps[i+1][j+1]:
-            lst[11] = maps[i][j + 1] + maps[i][j + 2] + maps[i + 1][j] + maps[i + 1][j + 1]
-        if lst[14] < maps[i][j+1] + maps[i+1][j] + maps[i+1][j+1] + maps[i+1][j+2]:
-            lst[14] = maps[i][j + 1] + maps[i + 1][j] + maps[i + 1][j + 1] + maps[i + 1][j + 2]
-        if lst[15] < maps[i][j] + maps[i][j+1] + maps[i][j+2] + maps[i+1][j+1]:
-            lst[15] = maps[i][j] + maps[i][j + 1] + maps[i][j + 2] + maps[i + 1][j + 1]
-        if lst[18] < maps[i][j] + maps[i][j+1] + maps[i+1][j+1] + maps[i+1][j+2]:
-            lst[18] = maps[i][j] + maps[i][j + 1] + maps[i + 1][j + 1] + maps[i + 1][j + 2]
-
-#16
-for i in range(0, N-2):
-    for j in range(0, M-2):
-        if lst[16] < maps[i][j] + maps[i][j+1] + maps[i+1][j] + maps[i+1][j+1]:
-            lst[16] = maps[i][j] + maps[i][j + 1] + maps[i + 1][j] + maps[i + 1][j + 1]
-
-print(max(lst))
+print(ans)
