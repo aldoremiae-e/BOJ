@@ -1,27 +1,19 @@
-from heapq import heappush, heappop
-def solution(O):
+from heapq import heappop, heappush
+def solution(operations):
     answer = []
-    l = len(O)
     h = []
-    for i in range(l):
-        op, n = O[i][0], int(O[i][2:])
-        
-        if op == 'I':
-            # 삽입
-            heappush(h, n)
-        elif op == 'D':
-            # 삭제
-            if not h:
-                continue
-                
-            if n > 0:
-                # 최댓값 삭제
-                m = max(h)
-                h.remove(m)
+    for op in operations:
+        o, n = op.split()
+        if o == 'I':
+            # 이러면 최소값찾는
+            heappush(h, int(n))
+        else:
+            if n == '-1':
+                if h:
+                    heappop(h)
             else:
-                # 최솟값 삭제
-                heappop(h)
-
+                if h:
+                    h.pop()
     if h:
         answer = [max(h), min(h)]
     else:
