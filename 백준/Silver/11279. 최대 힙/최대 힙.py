@@ -1,15 +1,16 @@
-from sys import stdin
 from heapq import heappop, heappush
-
-N = int(stdin.readline())
-heap = []
+import sys
+sys.setrecursionlimit(int(1e7))
+input = sys.stdin.readline
+N = int(input())
+h = []
 for _ in range(N):
-    x = int(stdin.readline())
+    x = int(input())
     if x > 0:
-        heappush(heap, -x)
-    elif x == 0:
-        if heap:
-            num = heappop(heap)
-            print(-num)
+        heappush(h, -x)
+    else:
+        if h:
+            cur = heappop(h)
+            print(-cur)
         else:
-            print('0')
+            print(0)
