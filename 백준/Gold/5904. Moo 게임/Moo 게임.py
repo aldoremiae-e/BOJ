@@ -2,7 +2,7 @@ N = int(input())
 
 memo = {}
 memo[0] = 3
-def top_down(n, idx):
+def solve(n, idx):
     # base-case
     if n == 1:
         print("m")
@@ -14,7 +14,7 @@ def top_down(n, idx):
     memo[idx] = memo[idx-1] * 2 + (idx + 3)
 
     if memo[idx] < n:
-        top_down(n, idx+1)
+        solve(n, idx+1)
 
     if memo[idx-1] + 1 == n:
         print("m")
@@ -23,5 +23,5 @@ def top_down(n, idx):
         print("o")
         exit()
     else:
-        top_down(n - (memo[idx-1] + idx + 3), 1)
-top_down(N, 1)
+        solve(n - (memo[idx-1] + idx + 3), 1)
+solve(N, 1)
