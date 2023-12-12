@@ -1,6 +1,5 @@
-# 출구 : 바깥으로~!
 from collections import deque
-from pprint import pprint
+
 T = int(input())
 
 def fire_bfs(q):
