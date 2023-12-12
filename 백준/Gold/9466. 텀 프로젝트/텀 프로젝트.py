@@ -2,7 +2,7 @@ import sys
 sys.setrecursionlimit(int(1e6))
 
 def dfs(i, cycle):
-    global ans
+    global ans, visit
     visit[i] = True
     cycle.append(i)
 
